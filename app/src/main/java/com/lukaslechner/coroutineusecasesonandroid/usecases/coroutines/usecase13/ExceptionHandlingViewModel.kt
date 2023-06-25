@@ -92,9 +92,6 @@ class ExceptionHandlingViewModel(
 
                 uiState.value = UiState.Success(versionFeatures)
             }
-
-
-
         }
     }
 }

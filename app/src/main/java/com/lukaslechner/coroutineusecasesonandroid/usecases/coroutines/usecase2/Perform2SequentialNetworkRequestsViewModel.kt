@@ -22,7 +22,7 @@ class Perform2SequentialNetworkRequestsViewModel(
                 uiState.value = UiState.Success(featuresOfMostRecentVersion)
             } catch (exception: Exception) {
                 Timber.e(exception)
-                uiState.value = UiState.Error(exception.localizedMessage)
+                uiState.value = UiState.Error("Network Request Failed!")
             }
         }
     }

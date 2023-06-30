@@ -48,7 +48,7 @@ class FlowUseCase2ViewModel(
             stockList.filter { stock ->
                 stock.country == "United States"
             }
-        }
+        }.cancellable()
         .map{ stockList ->
             stockList.filter{ stock ->
                 stock.name != "Apple" && stock.name != "Microsoft"

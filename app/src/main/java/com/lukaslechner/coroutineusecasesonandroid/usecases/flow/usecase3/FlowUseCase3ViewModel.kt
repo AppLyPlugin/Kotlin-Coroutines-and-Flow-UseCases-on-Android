@@ -3,9 +3,7 @@ package com.lukaslechner.coroutineusecasesonandroid.usecases.flow.usecase3
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.lukaslechner.coroutineusecasesonandroid.base.BaseViewModel
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
 class FlowUseCase3ViewModel(
@@ -36,6 +34,9 @@ class FlowUseCase3ViewModel(
         }
         .onCompletion {
             Timber.tag("Flow").d("Flow has completed.")
+        }.catch {throwable ->
+            Timber.tag("Flow").d("Enter catch operator with $throwable")
+            emit(UiState.Error("Something went wrong"))
         }
         .asLiveData()
 }

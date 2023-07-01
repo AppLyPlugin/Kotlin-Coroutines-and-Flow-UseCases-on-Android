@@ -2,12 +2,15 @@ package com.lukaslechner.coroutineusecasesonandroid.usecases.flow.usecase4
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.*
 import com.lukaslechner.coroutineusecasesonandroid.base.BaseActivity
 import com.lukaslechner.coroutineusecasesonandroid.base.flowUseCase4Description
 import com.lukaslechner.coroutineusecasesonandroid.databinding.ActivityFlowUsecase1Binding
 import com.lukaslechner.coroutineusecasesonandroid.utils.setGone
 import com.lukaslechner.coroutineusecasesonandroid.utils.setVisible
 import com.lukaslechner.coroutineusecasesonandroid.utils.toast
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -25,11 +28,28 @@ class FlowUseCase4Activity : BaseActivity() {
         setContentView(binding.root)
         binding.recyclerView.adapter = adapter
 
-        viewModel.currentStockPriceAsLiveData.observe(this) { uiState ->
-            if (uiState != null) {
-                render(uiState)
+//      Approach 1
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.currentStockPriceAsFlow.collect { uiState ->
+                    render(uiState)
+                }
+
+                //Using Hot Flow multiple collectors will not create multiple flows
+                viewModel.currentStockPriceAsFlow.collect { uiState ->
+                    render(uiState)
+                }
             }
         }
+
+//      Approach 2
+//        lifecycleScope.launch {
+//            viewModel.currentStockPriceAsFlow
+//                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+//                .collect{uiState ->
+//                    render(uiState)
+//                }
+//        }
     }
 
     private fun render(uiState: UiState) {
